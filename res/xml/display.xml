@@ -59,6 +59,14 @@
                 android:summary="@string/doze_summary"
                 android:persistent="false" />
 
+        <SwitchPreference
+                android:key="doze_fast_mode"
+                android:title="@string/doze_fast_mode_title"
+                android:summary="@string/doze_fast_mode_summary"
+                android:defaultValue="false"
+                android:persistent="false"
+                android:dependency="doze" />
+
         <!-- Lift to wake -->
         <SwitchPreference
                 android:key="lift_to_wake"
@@ -94,7 +102,7 @@
         <!-- Prevent accidental wake-up -->
         <com.android.settings.cyanogenmod.CMSystemSettingSwitchPreference
                 android:key="proximity_on_wake"
-                android:title="@string/proximity_wake_title"
+                android:title="@string/privent_mode_title"
                 android:summary="@string/proximity_wake_summary" />
 
         <!-- Seconds before sleep -->

@@ -104,6 +104,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_SCREEN_SAVER = "screensaver";
     private static final String KEY_LIFT_TO_WAKE = "lift_to_wake";
     private static final String KEY_DOZE = "doze";
+    private static final String KEY_FAST_DOZE = "doze_fast_mode";
     private static final String KEY_TAP_TO_WAKE = "tap_to_wake";
     private static final String KEY_AUTO_BRIGHTNESS = "auto_brightness";
     private static final String KEY_AUTO_ROTATE = "auto_rotate";
@@ -132,6 +133,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private SwitchPreference mAccelerometer;
     private SwitchPreference mLiftToWakePreference;
     private SwitchPreference mDozePreference;
+    private SwitchPreference mQuickLookPreference;
     private SwitchPreference mTapToWakePreference;
     private SwitchPreference mHighTouchSensitivity;
     private SwitchPreference mProximityCheckOnWakePreference;
@@ -272,6 +274,15 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         } else {
             if (displayPrefs != null && mDozePreference != null) {
                 displayPrefs.removePreference(mDozePreference);
+            }
+        }
+
+        mQuickLookPreference = (SwitchPreference) findPreference(KEY_FAST_DOZE);
+        if (mQuickLookPreference != null && Utils.isDozeAvailable(activity)) {
+            mQuickLookPreference.setOnPreferenceChangeListener(this);
+        } else {
+            if (displayPrefs != null && mQuickLookPreference != null) {
+                displayPrefs.removePreference(mQuickLookPreference);
             }
         }
 
@@ -582,6 +593,10 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             int value = Settings.Secure.getInt(getContentResolver(), DOZE_ENABLED, 1);
             mDozePreference.setChecked(value != 0);
         }
+        if (mQuickLookPreference != null) {
+            int value = Settings.Secure.getInt(getContentResolver(), Settings.Secure.DOZE_QUICK_LOOK_ENABLED, 1);
+            mQuickLookPreference.setChecked(value != 0);
+        }
 
         // Update tap to wake if it is available.
         if (mTapToWakePreference != null) {
@@ -741,6 +756,10 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         if (preference == mDozePreference) {
             boolean value = (Boolean) objValue;
             Settings.Secure.putInt(getContentResolver(), DOZE_ENABLED, value ? 1 : 0);
+        }
+        if (preference == mQuickLookPreference) {
+            boolean value = (Boolean) objValue;
+            Settings.Secure.putInt(getContentResolver(), Settings.Secure.DOZE_QUICK_LOOK_ENABLED, value ? 1 : 0);
         }
         if (preference == mTapToWakePreference) {
             boolean value = (Boolean) objValue;
